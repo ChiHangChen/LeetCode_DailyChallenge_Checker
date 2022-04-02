@@ -11,7 +11,6 @@ import chromedriver_autoinstaller
 
 
 def set_requests_session(driver, session):
-    print("Copying driver content to request session")
     selenium_user_agent = driver.execute_script("return navigator.userAgent;")
     session.headers.update({"user-agent": selenium_user_agent})
     for cookie in driver.get_cookies():
@@ -32,7 +31,7 @@ class LeetCodeParser():
         options = ChromeOptions()
         options.add_argument('--headless')
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.driver = webdriver.Chrome(chrome_options=options)
+        self.driver = webdriver.Chrome(options=options)
         self.driver.set_page_load_timeout(30)
         self.driver.implicitly_wait(3)
         self.user_agent = self.driver.execute_script(
@@ -40,7 +39,7 @@ class LeetCodeParser():
         )
 
     def fill_element(self, element_id):
-        elem = self.driver.find_element_by_id(element_id)
+        elem = self.driver.find_element(by='id', value=element_id)
         elem.clear()
         elem.send_keys(self.info[element_id])
 
@@ -55,8 +54,8 @@ class LeetCodeParser():
         self.fill_element("id_login")
         self.fill_element("id_password")
 
-        # self.driver.find_element_by_id('signin_btn').click()
-        login_btn = self.driver.find_element_by_id('signin_btn')
+        # self.driver.find_element(by='id', value='signin_btn').click()
+        login_btn = self.driver.find_element(by='id', value='signin_btn')
         self.driver.execute_script("arguments[0].click();", login_btn)
         print("Login success!")
         time.sleep(5)
